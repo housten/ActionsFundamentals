@@ -14,7 +14,7 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: checkout
-        uses: actions/checkout@4.1.1
+        uses: actions/checkout@v4.1.1
       - name: test-the-action
         id: action-checker
         uses: ./FancyAction
