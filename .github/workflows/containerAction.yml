@@ -1,0 +1,25 @@
+name: Hi 🌍
+
+on:
+  push:
+    branches: [main]
+    paths: [FancyAction/**]
+  workflow_dispatch:
+    inputs:
+      name:
+        description: "Who are you?"
+        type: string
+jobs:
+  test-my-action:
+    runs-on: ubuntu-latest
+    steps:
+      - name: checkout
+        uses: actions/checkout@4.1.1
+      - name: test-the-action
+        id: action-checker
+        uses: ./FancyAction
+        with:
+          who-to-greet: ${{ inputs.name }}
+      - name: show output
+        run: echo "The time was ${{steps.action-checker.outputs.time}}"
+  
