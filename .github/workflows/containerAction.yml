@@ -5,7 +5,12 @@ on:
     branches: [main]
     paths: [FancyAction/**]
   workflow_dispatch:
-
+    inputs:
+      who-to-greet:
+        description: 'Who do we target for 🗨️'
+        type: string
+        required: true  
+        
 jobs:
   test-my-action:
     runs-on: ubuntu-latest
@@ -16,7 +21,7 @@ jobs:
         id : action-checker
         uses :  ./FancyAction
         with :
-          who-to-greet: world
+          who-to-greet: ${{ inputs.who-to-greet }}
       - name: show output
         run : echo "The time was ${{ steps.action-checker.outputs.time }} when the action said hello"
           
