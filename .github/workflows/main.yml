@@ -2,6 +2,7 @@ name: My Actions Demo
 on: 
   push:
     branches: [main]
+    paths-ignore: [./FancyAction/**]
   pull_request:
     branches: [main]
   schedule:
