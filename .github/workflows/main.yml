@@ -1,0 +1,25 @@
+name: My Actions Demo
+on: 
+  push:
+    branches: [main]
+  pull_request:
+    branches: [main]
+  schedule:
+    - cron: '15 1 * * 0'
+  workflow_dispatch:
+
+jobs:
+  ShowInfo: 
+    runs-on: Ubuntu-latest
+    steps:
+      - run: |
+          echo "🎣 ${{github.action_repository}} triggered by ${{ github.event_name}}"
+          echo "Building branch ${{ github.ref }}"
+      - uses: actions/checkout@v4.1.1
+
+      - name: List files
+        run: |
+          echo "The repo ${{ github.repository }} contains the following"
+          tree
+      
+    
