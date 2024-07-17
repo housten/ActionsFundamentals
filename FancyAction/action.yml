@@ -5,8 +5,7 @@ author: Heidi
 inputs: 
   who-to-greet:
     description: "who should we say hi to"
-    required: true
-    default: 'world'
+    default: 'World'
 outputs:
   time:
     description: "the time we were friendly"
