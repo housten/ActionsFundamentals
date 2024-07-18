@@ -1,0 +1,68 @@
+name: .NET
+
+on:
+  push:
+    branches: [ "main" ]
+  pull_request:
+    branches: [ "main" ]
+
+jobs:
+  build:
+    strategy:
+      matrix: 
+        architecture: [x86, x64]
+        dotnet: [4.5.1, 4.8]
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v4
+    - name: Setup .NET
+      uses: actions/setup-dotnet@v4
+      with:
+        dotnet-version: ${{ matrix.dotnet }}
+    - name: Restore dependencies
+      run: dotnet restore
+    - name: Build
+      run: dotnet build --no-restore --runtime ${{ matrix.architecture }} --configuration Release
+    - name: Test
+      run: dotnet test --no-build --verbosity normal
+    - name: Pack
+      run: dotnet pack --configuration Release --runtime ${{ matrix.architecture }} --output ./artifacts/${{ matrix.architecture }}
+    - name: Upload Artifact
+      uses: actions/upload-artifact@v4.3.4
+      with:
+        name: ${{ matrix.architecture }}-${{ matrix.dotnet }}-artifact
+        path: ./artifacts/${{ matrix.architecture }}
+
+  combine:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Artifacts
+      uses: actions/download-artifact@v4.1.8
+      with:
+        name: x86-${{ matrix.dotnet }}-artifact
+        path: ./artifacts/x86
+    - name: Download Artifacts
+      uses: actions/download-artifact@v4.1.8
+      with:
+        name: x64-${{ matrix.dotnet }}-artifact
+        path: ./artifacts/x64
+    - name: Combine Artifacts
+      run: |
+        mkdir -p ./combined_artifacts
+        cp -r ./artifacts/x86/* ./combined_artifacts/
+        cp -r ./artifacts/x64/* ./combined_artifacts/
+    - name: Create Combined NuGet Package
+      run: dotnet pack ./combined_artifacts --output ./combined_artifacts
+## need an upload here?
+  publish:
+    needs: combine
+    runs-on: ubuntu-latest
+    steps:
+    - name: Download Combined Artifact
+      uses: actions/download-artifact@v4.1.8
+      with:
+        path: ./combined_artifacts
+    - name: Push to NuGet
+      run: dotnet nuget push ./combined_artifacts/*.nupkg --source <YOUR_NUGET_FEED_URL> --api-key ${{ secrets.NUGET_API_KEY }}
