@@ -10,14 +10,16 @@ on:
   workflow_dispatch:
 
 jobs:
-  ShowInfo: 
+  ShowInfo:   
+    strategy:
+      matrix:
+        env: [dev,test,qa]
+    env: ${{ matrix.env }}
     runs-on: Ubuntu-latest
     steps:
       - run: |
           echo "🎣 ${{github.action_repository}} triggered by ${{ github.event_name}}"
-          echo "Building branch ${{ github.ref }}"
-      - uses: actions/checkout@v4.1.1
-
+          echo "${{matrix.env}} : ${{ vars.service_account_name }} : ${{ vars.service_account_name }}"
       - name: List files
         run: |
           echo "The repo ${{ github.repository }} contains the following"
