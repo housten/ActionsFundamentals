@@ -9,19 +9,19 @@ on:
     - cron: '15 1 * * 0'
   workflow_dispatch:
     inputs:
-      environment:
+      env:
         type: environment
         description: Environment to deploy to
-      
-
+    
 jobs:
   ShowInfo:   
-    environment: ${{ github.events.inputs.environment }}
+    environment: ${{ github.events.inputs.env }}
     runs-on: Ubuntu-latest
     steps:
       - run: |
           echo "🎣 ${{github.action_repository}} triggered by ${{ github.event_name}}"
           echo "${{github.events.inputs.environment}} : ${{ vars.service_account_name }} : ${{ vars.service_account_password }}"
+          echo " ${{ toJson(vars) }}"
       - name: List files
         run: |
           echo "The repo ${{ github.repository }} contains the following"
