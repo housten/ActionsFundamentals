@@ -8,12 +8,12 @@ on:
     
 jobs:
   ShowInfo:   
-    environment: ${{ github.events.inputs.env }}
+    environment: ${{ github.event.inputs.env }}
     runs-on: Ubuntu-latest
     steps:
       - run: |
           echo "🎣 ${{github.action_repository}} triggered by ${{ github.event_name}}"
-          echo "${{ github.events.inputs.env }} : ${{ vars.service_account_name }} : ${{ vars.service_account_password }}"
+          echo "${{ github.event.inputs.env }} : ${{ vars.service_account_name }} : ${{ secrets.service_account_password }}"
           echo " ${{ toJson(vars) }}"
       - name: List files
         run: |
