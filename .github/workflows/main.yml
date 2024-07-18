@@ -1,12 +1,5 @@
 name: My Actions Demo
 on: 
-  push:
-    branches: [main]
-    paths-ignore: [./FancyAction/**]
-  pull_request:
-    branches: [main]
-  schedule:
-    - cron: '15 1 * * 0'
   workflow_dispatch:
     inputs:
       env:
@@ -20,7 +13,7 @@ jobs:
     steps:
       - run: |
           echo "🎣 ${{github.action_repository}} triggered by ${{ github.event_name}}"
-          echo "${{github.events.inputs.environment}} : ${{ vars.service_account_name }} : ${{ vars.service_account_password }}"
+          echo "${{ github.events.inputs.env }} : ${{ vars.service_account_name }} : ${{ vars.service_account_password }}"
           echo " ${{ toJson(vars) }}"
       - name: List files
         run: |
