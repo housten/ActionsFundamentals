@@ -1,3 +1,5 @@
+name: env-demo
+
 on: 
   workflow_dispatch:
      inputs:
