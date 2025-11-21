@@ -1,0 +1,20 @@
+on: 
+  workflow_dispatch:
+     inputs:
+       environments:
+        type: environment
+        description: "which environment?"
+        required: true
+jobs:
+  showmyvars:
+    runs-on: ubuntu-latest
+    strategy:
+      fail-fast: false
+      matrix:
+        env: [dev,qa]
+
+    environment: ${{ matrix.env }}
+    steps:
+      - run: echo ${{vars.svcAccountName}} ; echo ${{ secrets.svcAccountPassword }}
+      - if: matrix.env == 'qa' 
+        run: echo "QA Only" >> $GITHUB_STEP_SUMMARY
