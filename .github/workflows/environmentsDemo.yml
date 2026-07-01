@@ -17,6 +17,6 @@ jobs:
 
     environment: ${{ matrix.env }}
     steps:
-      - run: echo ${{vars.svcAccountName}} ; echo ${{ secrets.svcAccountPassword }}
+      - run: echo ${{vars.SERVICE_ACCOUNT_NAME }} ; echo ${{ secrets.SERVICE_ACCOUNT_PASSWORD }}
       - if: ${{ matrix.env == inputs.environments }}
         run: echo "🔍 Special steps for selected environment ${{ inputs.environments }}" >> $GITHUB_STEP_SUMMARY
