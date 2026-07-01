@@ -1,22 +1,42 @@
-name: env-demo
+name: environment-demo
 
-on: 
+on:
   workflow_dispatch:
-     inputs:
-       environments:
+    inputs:
+      environments:
         type: environment
         description: "which environment?"
         required: true
-jobs:
-  showmyvars:
-    runs-on: ubuntu-latest
-    strategy:
-      fail-fast: false
-      matrix:
-        env: [dev,test,qa]
 
-    environment: ${{ matrix.env }}
+jobs:
+  build:
+    runs-on: ubuntu-latest
     steps:
-      - run: echo ${{vars.SERVICE_ACCOUNT_NAME }} ; echo ${{ secrets.SERVICE_ACCOUNT_PASSWORD }}
-      - if: ${{ matrix.env == inputs.environments }}
+      - run: echo "🏗️ Build completed"
+
+  test:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: test
+    steps:
+      - run: echo ${{ vars.SERVICE_ACCOUNT_NAME }} ; echo ${{ secrets.SERVICE_ACCOUNT_PASSWORD }}
+      - if: ${{ inputs.environments == 'test' }}
+        run: echo "🔍 Special steps for selected environment ${{ inputs.environments }}" >> $GITHUB_STEP_SUMMARY
+
+  qa:
+    runs-on: ubuntu-latest
+    needs: build
+    environment: qa
+    steps:
+      - run: echo ${{ vars.SERVICE_ACCOUNT_NAME }} ; echo ${{ secrets.SERVICE_ACCOUNT_PASSWORD }}
+      - if: ${{ inputs.environments == 'qa' }}
+        run: echo "🔍 Special steps for selected environment ${{ inputs.environments }}" >> $GITHUB_STEP_SUMMARY
+
+  production:
+    runs-on: ubuntu-latest
+    needs: [test, qa]
+    environment: production
+    steps:
+      - run: echo ${{ vars.SERVICE_ACCOUNT_NAME }} ; echo ${{ secrets.SERVICE_ACCOUNT_PASSWORD }}
+      - if: ${{ inputs.environments == 'production' }}
         run: echo "🔍 Special steps for selected environment ${{ inputs.environments }}" >> $GITHUB_STEP_SUMMARY
