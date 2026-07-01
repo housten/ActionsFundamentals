@@ -13,10 +13,10 @@ jobs:
     strategy:
       fail-fast: false
       matrix:
-        env: [dev,qa]
+        env: [dev,test,qa]
 
     environment: ${{ matrix.env }}
     steps:
       - run: echo ${{vars.svcAccountName}} ; echo ${{ secrets.svcAccountPassword }}
       - if: ${{ matrix.env == inputs.environments }}
-        run: echo "Special steps for selected environment ${{ inputs.environments }}" >> $GITHUB_STEP_SUMMARY
+        run: echo "🔍 Special steps for selected environment ${{ inputs.environments }}" >> $GITHUB_STEP_SUMMARY
