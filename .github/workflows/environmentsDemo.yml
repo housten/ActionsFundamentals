@@ -18,5 +18,5 @@ jobs:
     environment: ${{ matrix.env }}
     steps:
       - run: echo ${{vars.svcAccountName}} ; echo ${{ secrets.svcAccountPassword }}
-      - if: matrix.env == 'qa' 
-        run: echo "QA Only" >> $GITHUB_STEP_SUMMARY
+      - if: ${{ matrix.env == inputs.environments }}
+        run: echo "Special steps for selected environment ${{ inputs.environments }}" >> $GITHUB_STEP_SUMMARY
